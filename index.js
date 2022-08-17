@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const http = require('http')
 const express = require('express')
@@ -11,10 +12,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 io.on('connection', socket => {
 
-	
-
-
-
+	socket.on('login', (data, cb) => {
+		if (data.username in config.login) {
+			cb('success', `user ${data.username} doesn't exist`)
+		} else {
+			cb('error', `user ${data.username} doesn't exist`)
+		}
+	})
 
 
 
@@ -26,8 +30,8 @@ io.on('connection', socket => {
 	// Send to everyone except that client -- socket.broadcast.emit();
 	// Send to everyone -- io.emit();
 	// Send to specific -- io.to(id).emit();
-}
+})
 
 server.listen(config.port || process.env.PORT, () => {
-	console.log(`Server running on port ${PORT}`)
+	console.log(`Server running on port ${config.port}`)
 })

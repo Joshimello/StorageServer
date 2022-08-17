@@ -1,4 +1,7 @@
 {
 	"port": 3003,
-	"storage": ""
+	"storage": "",
+	"login": {
+		"test": "test"
+	}
 }

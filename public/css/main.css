@@ -1,0 +1,19 @@
+.form-control {
+    letter-spacing: .25rem;
+    text-transform: uppercase;
+    font-family: monospace;
+}
+
+.display-6 {
+    letter-spacing: 0.9rem;
+    text-indent: 0.9rem;
+}
+
+.vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 50px #5C9EAD inset;
+}
