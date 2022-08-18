@@ -13,12 +13,16 @@ app.use(express.static(path.join(__dirname, 'public')))
 io.on('connection', socket => {
 
 	socket.on('login', (data, cb) => {
-		if (data.username in config.login) {
-			cb('success', `user ${data.username} doesn't exist`)
-		} else {
+		data.username in config.login ?
+			data.password == config.login[data.username] ?
+				loginApprove(data.username) :
+				cb('error', `password for user ${data.username} incorrect`) :
 			cb('error', `user ${data.username} doesn't exist`)
-		}
 	})
+
+	const loginApprove = (username) => {
+		socket.emit('', '')
+	}
 
 
 
