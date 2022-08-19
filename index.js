@@ -10,17 +10,21 @@ const io = socketio(server)
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'))
 app.use(express.static(path.join(__dirname, 'public')))
 
+fs.existsSync('users') ? null : fs.mkdirSync('users')
+
 io.on('connection', socket => {
 
 	socket.on('login', (data, cb) => {
 		data.username in config.login ?
 			data.password == config.login[data.username] ?
 				loginApprove(data.username) :
-				cb('error', `password for user ${data.username} incorrect`) :
-			cb('error', `user ${data.username} doesn't exist`)
+				cb('error', 'password') :
+			cb('error', 'username')
 	})
 
 	const loginApprove = (username) => {
+		let userFolder = path.join(__dirname, 'users', username)
+		fs.existsSync(userFolder) ? null : fs.mkdirSync(userFolder)
 		socket.emit('', '')
 	}
 
