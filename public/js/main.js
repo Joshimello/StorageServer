@@ -35,13 +35,17 @@ socket.on('join', data => {
 })
     
 siofu.listenOnDrop($('#main')[0])
-
-siofu.addEventListener("progress", function(event) {
-    var percent = event.bytesLoaded / event.file.size * 100
-    console.log("File is", percent.toFixed(2), "percent loaded")
+$('#main').on("drop", function(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    $('#uploadprogress').fadeIn(100)
 })
 
-siofu.addEventListener("complete", function(event) {
-    console.log(event.success)
-    console.log(event.file)
+siofu.addEventListener('progress', e => {
+    var percent = e.bytesLoaded / e.file.size * 100
+    $('#uploadprogress').text(percent.toFixed(0))
+})
+
+siofu.addEventListener('complete', e => {
+    // on upload complete
 })

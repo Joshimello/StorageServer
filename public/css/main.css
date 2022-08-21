@@ -1,3 +1,7 @@
+body {
+	overflow-x: hidden;
+}
+
 hr {
 	margin: 0;
 }
@@ -45,4 +49,12 @@ hr {
 
 .fa-arrow-square-left, .fa-bars {
 	cursor: pointer;
+}
+
+.progressbg {
+	z-index: -1;
+}
+
+#uploadprogress {
+	display: none;
 }

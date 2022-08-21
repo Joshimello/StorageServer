@@ -35,19 +35,17 @@ io.on('connection', socket => {
 		uploader.dir = userFolder
 		uploader.listen(socket)
 
-		uploader.on("saved", function(event) {
-		    console.log(event.file)
+		uploader.on('saved', e => {
+		    socket.emit('join', dirTree(userFolder, {attributes: ['size', 'type', 'extension']}))
 		})
 
-		uploader.on("error", function(event) {
-		    console.log("Error from uploader", event)
+		uploader.on('error', e => {
+		    console.log('upload error', e)
 		})
 	}
 
-	
-
 	socket.on('disconnect', () => {
-		
+		// on disconnect
 	})
 
 	// Send to 1 client -- socket.emit('key', value);
