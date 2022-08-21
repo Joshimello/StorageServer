@@ -20,8 +20,8 @@ io.on('connection', socket => {
 		data.username in config.login ?
 			data.password == config.login[data.username] ?
 				loginApprove(data.username) :
-				cb('error', 'password') :
-			cb('error', 'username')
+				cb('password') :
+			cb('username')
 	})
 
 	const loginApprove = (username) => {
@@ -41,6 +41,16 @@ io.on('connection', socket => {
 
 		uploader.on('error', e => {
 		    console.log('upload error', e)
+		})
+
+		socket.on('addfolder', (data, cb) => {
+			if (data == null || data.trim() === '') {
+				cb(true)
+			} else {
+				cb(false)
+				fs.existsSync(path.join(userFolder, data)) ? null : fs.mkdirSync(path.join(userFolder, data))
+				socket.emit('join', dirTree(userFolder, {attributes: ['size', 'type', 'extension']}))
+			}
 		})
 	}
 

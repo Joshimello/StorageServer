@@ -5,9 +5,9 @@ $('#main').load('html/login.html')
 
 $(document).on('submit', '#loginform', e => {
     e.preventDefault()
-    socket.emit('login', { "username": $('#username').val(), "password": $('#password').val() }, (err, msg) => {
-        msg == 'username' ? $('#username').addClass('is-invalid') : $('#username').removeClass('is-invalid')
-        msg == 'password' ? $('#password').addClass('is-invalid') : $('#password').removeClass('is-invalid')
+    socket.emit('login', { "username": $('#username').val(), "password": $('#password').val() }, cb => {
+        cb == 'username' ? $('#username').addClass('is-invalid') : $('#username').removeClass('is-invalid')
+        cb == 'password' ? $('#password').addClass('is-invalid') : $('#password').removeClass('is-invalid')
     })
 })
 
@@ -21,7 +21,7 @@ socket.on('join', data => {
         $('#loginname').text(data.name)
         data.children.forEach(index => {
             $('#storagelist').append(`
-                <div class="directory p-2 d-flex align-items-center">
+                <div class="${index.type == 'directory' ? 'folder' : 'file'} directory p-2 d-flex align-items-center">
                     <i class="far fa-${index.type == 'directory' ? icons['dir'] : icons[index.extension.replace('.', '')]} fa-fw mx-2"></i>
                     <span class="font-1 me-auto w-50 overflow-hidden text-nowrap">${index.name}</span>
                     <i class="fal fa-external-link fa-fw mx-2"></i>
@@ -31,21 +31,58 @@ socket.on('join', data => {
                 </div>`
             )
         })
+
+        siofu.listenOnInput($('#addfile')[0])
+        $('#addfile').on('change', e => {
+            $('#addfilemodal').fadeOut('fast')
+            $('#uploadprogress').fadeIn(100)
+        })
+            
+        siofu.listenOnDrop($('#main')[0])
+        $('#main').on('drop', e => {
+            e.preventDefault()
+            e.stopPropagation()
+            $('#uploadprogress').fadeIn(100)
+        })
+
+        siofu.addEventListener('progress', e => {
+            var percent = e.bytesLoaded / e.file.size * 100
+            $('#uploadprogress').text(percent.toFixed(0))
+        })
+
+        siofu.addEventListener('complete', e => {
+            // on upload complete
+        })
+
+        $(document).on('click', '#addfolderbtn', () => {
+            socket.emit('addfolder', $('#addfolder').val(), cb => {
+                cb ? $('#addfolder').addClass('is-invalid') : $('#addfoldermodal').fadeOut('fast')
+            })
+        })
+
+
+
+
+
+
+
+
+
+
+        $(document).on('click', '#addfileopen', () => {
+            $('#addfilemodal').fadeIn('fast')
+        })
+
+        $(document).on('click', '#addfolderopen', () => {
+            $('#addfoldermodal').fadeIn('fast')
+        })
+
+        $(document).on('click', '#addfileclose', () => {
+            $('#addfilemodal').fadeOut('fast')
+        })
+
+        $(document).on('click', '#addfolderclose', () => {
+            $('#addfoldermodal').fadeOut('fast')
+        })
     })
-})
-    
-siofu.listenOnDrop($('#main')[0])
-$('#main').on("drop", function(event) {
-    event.preventDefault()
-    event.stopPropagation()
-    $('#uploadprogress').fadeIn(100)
-})
-
-siofu.addEventListener('progress', e => {
-    var percent = e.bytesLoaded / e.file.size * 100
-    $('#uploadprogress').text(percent.toFixed(0))
-})
-
-siofu.addEventListener('complete', e => {
-    // on upload complete
 })
