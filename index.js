@@ -3,8 +3,10 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
+const siofu = require('socketio-file-upload')
+const dirTree = require('directory-tree')
 
-const app = express()
+const app = express().use(siofu.router)
 const server = http.createServer(app)
 const io = socketio(server)
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'))
@@ -23,12 +25,26 @@ io.on('connection', socket => {
 	})
 
 	const loginApprove = (username) => {
+		// create & set user folder path
 		let userFolder = path.join(__dirname, 'users', username)
 		fs.existsSync(userFolder) ? null : fs.mkdirSync(userFolder)
-		socket.emit('', '')
+
+		socket.emit('join', dirTree(userFolder, {attributes: ['size', 'type', 'extension']}))
+
+		var uploader = new siofu()
+		uploader.dir = userFolder
+		uploader.listen(socket)
+
+		uploader.on("saved", function(event) {
+		    console.log(event.file)
+		})
+
+		uploader.on("error", function(event) {
+		    console.log("Error from uploader", event)
+		})
 	}
 
-
+	
 
 	socket.on('disconnect', () => {
 		

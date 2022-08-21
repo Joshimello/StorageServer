@@ -1,7 +1,18 @@
+hr {
+	margin: 0;
+}
+
 .form-control {
     letter-spacing: .25rem;
     text-transform: uppercase;
     font-family: monospace;
+}
+
+.font-1 {
+	letter-spacing: 0.2rem;
+	text-indent: 0.2rem;
+	font-family: monospace;
+	text-overflow: ellipsis;
 }
 
 .display-6 {
@@ -9,11 +20,29 @@
     text-indent: 0.9rem;
 }
 
-.vignette {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 0 0 50px #5C9EAD inset;
+.directory {
+	transition: background .1s;
+}
+
+.directory:hover {
+	background-color: rgba(1, 1, 1, 0.1);
+}
+
+.directory .fal {
+	display: none;
+	opacity: 0;
+	transition: opacity .1s;
+}
+
+.directory:hover .fal {
+	display: block;
+	opacity: 1;
+}
+
+.directory:hover .filesize {
+	display: none;
+}
+
+.fa-arrow-square-left, .fa-bars {
+	cursor: pointer;
 }
