@@ -35,13 +35,10 @@ hr {
 
 .directory .fal {
 	display: none;
-	opacity: 0;
-	transition: opacity .1s;
 }
 
 .directory:hover .fal {
 	display: block;
-	opacity: 1;
 }
 
 .directory:hover .filesize {
@@ -65,4 +62,13 @@ hr {
 	background-color: rgba(1, 1, 1, 0.2);
 	backdrop-filter: blur(5px);
 	display: none;
+}
+
+.fa-external-link, .fa-edit, .fa-trash {
+	opacity: .5;
+	transition: opacity .25s;
+}
+
+.fa-external-link:hover, .fa-edit:hover, .fa-trash:hover {
+	opacity: 1;
 }

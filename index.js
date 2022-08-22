@@ -5,6 +5,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const siofu = require('socketio-file-upload')
 const dirTree = require('directory-tree')
+const crypto = require("crypto")
 
 const app = express().use(siofu.router)
 const server = http.createServer(app)
@@ -15,6 +16,10 @@ app.use(express.static(path.join(__dirname, 'public')))
 fs.existsSync('users') ? null : fs.mkdirSync('users')
 
 io.on('connection', socket => {
+
+	socket.on('auth', (data, cb) => {
+		// on auto auth
+	})
 
 	socket.on('login', (data, cb) => {
 		data.username in config.login ?

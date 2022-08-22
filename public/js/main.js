@@ -1,7 +1,12 @@
 const socket = io()
-const siofu = new SocketIOFileUpload(socket);
+const siofu = new SocketIOFileUpload(socket)
 
-$('#main').load('html/login.html')
+Cookie.get('auth') == undefined ? 
+$('#main').load('html/login.html') : 
+socket.emit('auth', Cookie.get('auth'), cb => {
+    cb ? null : $('#main').load('html/login.html')
+})
+
 
 $(document).on('submit', '#loginform', e => {
     e.preventDefault()
@@ -21,7 +26,7 @@ socket.on('join', data => {
         $('#loginname').text(data.name)
         data.children.forEach(index => {
             $('#storagelist').append(`
-                <div class="${index.type == 'directory' ? 'folder' : 'file'} directory p-2 d-flex align-items-center">
+                <div class="${index.type == 'directory' ? `folder` : 'file'} directory p-2 d-flex align-items-center">
                     <i class="far fa-${index.type == 'directory' ? icons['dir'] : icons[index.extension.replace('.', '')]} fa-fw mx-2"></i>
                     <span class="font-1 me-auto w-50 overflow-hidden text-nowrap">${index.name}</span>
                     <i class="fal fa-external-link fa-fw mx-2"></i>
@@ -60,15 +65,6 @@ socket.on('join', data => {
             })
         })
 
-
-
-
-
-
-
-
-
-
         $(document).on('click', '#addfileopen', () => {
             $('#addfilemodal').fadeIn('fast')
         })
@@ -84,5 +80,54 @@ socket.on('join', data => {
         $(document).on('click', '#addfolderclose', () => {
             $('#addfoldermodal').fadeOut('fast')
         })
+
+
+
+
+        $(document).on('click', '.directory', e => {
+            fileType = $(e.delegateTarget).hasClass('folder') ? 'folder' : 'file'
+            fileName = $(e.delegateTarget).children('')
+
+            if (fileType == 'folder') {
+
+            }
+            if($(e.target).prop('tagName') == 'SPAN') {
+                console.log($(e.target).text())
+            }
+
+            if($(e.target).prop('tagName') == 'I') {
+                if($(e.target).hasClass('fa-external-link')) {
+                    console.log('share')
+                }
+
+                if($(e.target).hasClass('fa-edit')) {
+                    console.log('rename')
+                }
+
+                if($(e.target).hasClass('fa-trash')) {
+                    console.log('delete')
+                }
+            }
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     })
 })
