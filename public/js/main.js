@@ -1,12 +1,15 @@
 const socket = io()
 const siofu = new SocketIOFileUpload(socket)
 
-Cookie.get('auth') == undefined ? 
+Cookies.get('auth') == undefined ? 
 $('#main').load('html/login.html') : 
-socket.emit('auth', Cookie.get('auth'), cb => {
+socket.emit('auth', Cookies.get('auth'), cb => {
     cb ? null : $('#main').load('html/login.html')
 })
 
+socket.on('token', data => {
+    Cookies.set('auth', data)
+})
 
 $(document).on('submit', '#loginform', e => {
     e.preventDefault()
@@ -15,11 +18,6 @@ $(document).on('submit', '#loginform', e => {
         cb == 'password' ? $('#password').addClass('is-invalid') : $('#password').removeClass('is-invalid')
     })
 })
-
-const humanFileSize = size => {
-    var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024))
-    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i]
-}
 
 socket.on('join', data => {
     $('#main').load('html/main.html', () => {
@@ -131,3 +129,8 @@ socket.on('join', data => {
 
     })
 })
+
+const humanFileSize = size => {
+    var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024))
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i]
+}
