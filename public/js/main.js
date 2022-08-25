@@ -34,12 +34,6 @@ socket.on('join', data => {
                 </div>`
             )
         })
-
-        siofu.listenOnInput($('#addfile')[0])
-        $('#addfile').on('change', e => {
-            $('#addfilemodal').fadeOut('fast')
-            $('#uploadprogress').fadeIn(100)
-        })
             
         siofu.listenOnDrop($('#main')[0])
         $('#main').on('drop', e => {
@@ -56,31 +50,6 @@ socket.on('join', data => {
         siofu.addEventListener('complete', e => {
             // on upload complete
         })
-
-        $(document).on('click', '#addfolderbtn', () => {
-            socket.emit('addfolder', $('#addfolder').val(), cb => {
-                cb ? $('#addfolder').addClass('is-invalid') : $('#addfoldermodal').fadeOut('fast')
-            })
-        })
-
-        $(document).on('click', '#addfileopen', () => {
-            $('#addfilemodal').fadeIn('fast')
-        })
-
-        $(document).on('click', '#addfolderopen', () => {
-            $('#addfoldermodal').fadeIn('fast')
-        })
-
-        $(document).on('click', '#addfileclose', () => {
-            $('#addfilemodal').fadeOut('fast')
-        })
-
-        $(document).on('click', '#addfolderclose', () => {
-            $('#addfoldermodal').fadeOut('fast')
-        })
-
-
-
 
         $(document).on('click', '.directory', e => {
             fileType = $(e.delegateTarget).hasClass('folder') ? 'folder' : 'file'
@@ -107,26 +76,6 @@ socket.on('join', data => {
                 }
             }
         })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     })
 })
 
