@@ -23,6 +23,7 @@ io.on('connection', socket => {
 			if (auth.login[key].token == data){
 				cb(true)
 				loginApprove(key)
+				console.log(key)
 				return
 			}
 		})
@@ -61,6 +62,7 @@ io.on('connection', socket => {
 		})
 
 		socket.on('addfolder', (data, cb) => {
+			console.log(data)
 			if (data == null || data.trim() === '') {
 				cb(true)
 			} else {

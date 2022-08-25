@@ -27,9 +27,9 @@ socket.on('join', data => {
                 <div class="${index.type == 'directory' ? `folder` : 'file'} directory p-2 d-flex align-items-center">
                     <i class="far fa-${index.type == 'directory' ? icons['dir'] : icons[index.extension.replace('.', '')]} fa-fw mx-2"></i>
                     <span class="font-1 me-auto w-50 overflow-hidden text-nowrap">${index.name}</span>
-                    <i class="fal fa-external-link fa-fw mx-2"></i>
-                    <i class="fal fa-edit fa-fw me-1"></i>
-                    <i class="fal fa-trash fa-fw me-2"></i>
+                    <i class="fal fa-external-link fa-fw mx-2" onclick="modalLoad('shareitem', '${index.name}')"></i>
+                    <i class="fal fa-edit fa-fw me-1" onclick="modalLoad('renameitem', '${index.name}')"></i>
+                    <i class="fal fa-trash fa-fw me-2" onclick="modalLoad('deleteitem', '${index.name}')"></i>
                     <span class="font-1 ms-auto text-nowrap filesize">${humanFileSize(index.size)}</span>
                 </div>`
             )
@@ -49,32 +49,6 @@ socket.on('join', data => {
 
         siofu.addEventListener('complete', e => {
             // on upload complete
-        })
-
-        $(document).on('click', '.directory', e => {
-            fileType = $(e.delegateTarget).hasClass('folder') ? 'folder' : 'file'
-            fileName = $(e.delegateTarget).children('')
-
-            if (fileType == 'folder') {
-
-            }
-            if($(e.target).prop('tagName') == 'SPAN') {
-                console.log($(e.target).text())
-            }
-
-            if($(e.target).prop('tagName') == 'I') {
-                if($(e.target).hasClass('fa-external-link')) {
-                    console.log('share')
-                }
-
-                if($(e.target).hasClass('fa-edit')) {
-                    console.log('rename')
-                }
-
-                if($(e.target).hasClass('fa-trash')) {
-                    console.log('delete')
-                }
-            }
         })
     })
 })
