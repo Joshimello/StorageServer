@@ -57,8 +57,8 @@ const modalLoad = (action, filename) => {
 			.then(() => {
 				$('#deleteitembtn').click(() => {
 					socket.emit('deleteitem', filename, cb => {
-		                cb ? null : null
-		            })
+						console.log(cb)
+					})
 				})
 			})
 
@@ -78,7 +78,7 @@ const modalLoad = (action, filename) => {
 			.promise()
 			.then(() => {
 				$('#renameitembtn').click(() => {
-					socket.emit('renameitem', filename, cb => {
+					socket.emit('renameitem', {'filename': filename, 'newname': $('#renameitem').val()}, cb => {
 		                cb ? null : null
 		            })
 				})
@@ -107,8 +107,6 @@ const modalLoad = (action, filename) => {
 			})
 
 			break
-
-
 	}
 
 	$('#modal').fadeIn('fast')

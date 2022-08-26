@@ -5,7 +5,8 @@ const express = require('express')
 const socketio = require('socket.io')
 const siofu = require('socketio-file-upload')
 const dirTree = require('directory-tree')
-const crypto = require("crypto")
+const crypto = require('crypto')
+const sanitize = require('sanitize-filename')
 
 const app = express().use(siofu.router)
 const server = http.createServer(app)
@@ -39,6 +40,8 @@ io.on('connection', socket => {
 	})
 
 	const loginApprove = (username) => {
+
+		// allocate or reallocate token on login
 		auth.login[username].token = crypto.randomBytes(16).toString('hex')
 		socket.emit('token', auth.login[username].token)
 		fs.writeFileSync('auth.json', JSON.stringify(auth, null, 4))
@@ -49,6 +52,7 @@ io.on('connection', socket => {
 
 		socket.emit('join', dirTree(userFolder, {attributes: ['size', 'type', 'extension']}))
 
+		// on file upload
 		var uploader = new siofu()
 		uploader.dir = userFolder
 		uploader.listen(socket)
@@ -61,6 +65,7 @@ io.on('connection', socket => {
 		    console.log('upload error', e)
 		})
 
+		// on add folder
 		socket.on('addfolder', (data, cb) => {
 			console.log(data)
 			if (data == null || data.trim() === '') {
@@ -70,6 +75,35 @@ io.on('connection', socket => {
 				fs.existsSync(path.join(userFolder, data)) ? null : fs.mkdirSync(path.join(userFolder, data))
 				socket.emit('join', dirTree(userFolder, {attributes: ['size', 'type', 'extension']}))
 			}
+		})
+
+		// on delete file
+		socket.on('deleteitem', (file, cb) => {
+			console.log('test1')
+			try {
+				fs.rmSync(path.join(userFolder, file), { recursive: true, force: true })
+			} catch (err) {
+				console.log(err.message)
+				cb(err.message)
+				return
+			}
+			socket.emit('join', dirTree(userFolder, {attributes: ['size', 'type', 'extension']}))
+		})
+
+		// on rename file
+		socket.on('renameitem', (data, cb) => {
+			try {
+				fs.renameSync(path.join(userFolder, data.filename), path.join(userFolder, sanitize(data.newname)))
+			} catch (err) {
+				cb(err.message)
+				return
+			}
+			socket.emit('join', dirTree(userFolder, {attributes: ['size', 'type', 'extension']}))
+		})
+
+		// on share file
+		socket.on('shareitem', (file, cb) => {
+			
 		})
 	}
 
